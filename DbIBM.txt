@@ -1,0 +1,59 @@
+CREATE DATABASE IF NOT EXISTS ibm_prueba;
+USE ibm_prueba;
+
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE `usuario` (
+  `id_usuario` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre_usuario` varchar(50) NOT NULL,
+  `direccion_usuario` varchar(100) NOT NULL,
+  `ciudad_usuario` varchar(30) NOT NULL,
+  `telefono_usuario` varchar(20) NOT NULL,
+  PRIMARY KEY  (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `asesor`;
+CREATE TABLE `asesor` (
+  `id_asesor` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre_asesor` varchar(50) NOT NULL,
+  `tipo_asesor` varchar(50) NOT NULL,
+  PRIMARY KEY  (`id_asesor`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `tarjeta`;
+CREATE TABLE `tarjeta` (
+  `id_tarjeta` bigint(20) unsigned NOT NULL auto_increment,
+  `id_usuario` bigint(20) unsigned NOT NULL,
+  `id_asesor` bigint(20) unsigned NOT NULL,
+  `numero_tarjeta` varchar(16) NOT NULL,
+  `tipo_tarjeta` varchar(50) NOT NULL,
+  `ccv_tarjeta` char(4) NOT NULL,
+  PRIMARY KEY  (`id_tarjeta`),
+  KEY `FK_Tarjeta_Usuario` (`id_usuario`),
+  KEY `FK_Tarjeta_Asesor` (`id_asesor`),
+  CONSTRAINT `FK_Tarjeta_Usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FK_Tarjeta_Asesor` FOREIGN KEY (`id_asesor`) REFERENCES `asesor` (`id_asesor`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `consumo`;
+CREATE TABLE `consumo` (
+  `id_consumo` bigint(20) unsigned NOT NULL auto_increment,
+  `id_usuario` bigint(20) unsigned NOT NULL,
+  `id_tarjeta` bigint(20) unsigned NOT NULL,
+  `monto_consumo` int(10) unsigned default NULL,
+  `fecha_consumo` datetime default NULL,
+  PRIMARY KEY  (`id_consumo`),
+  KEY `FK_Consumo_Usuario` (`id_usuario`),
+  KEY `FK_Consumo_Tarjeta` (`id_tarjeta`),
+  CONSTRAINT `FK_Consumo_Usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FK_Consumo_Tarjeta` FOREIGN KEY (`id_tarjeta`) REFERENCES `tarjeta` (`id_tarjeta`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into usuario (nombre_usuario, direccion_usuario, ciudad_usuario, telefono_usuario)
+value('Andres Gonzalez', 'Diagonal 117#45-67', 'Santa Marta','3004719805');
+insert into usuario (nombre_usuario, direccion_usuario, ciudad_usuario, telefono_usuario)
+value('Jose Daza', 'Diagonal 117#45-67', 'Santa Marta','3004719805');
+
+insert into asesor (nombre_asesor, tipo_asesor)
+value('Jose Julio Julito', 'Comercial');
+insert into asesor (nombre_asesor, tipo_asesor)
+value('Miguel Jose Camacho', 'Comercial');
